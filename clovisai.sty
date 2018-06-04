@@ -1,2 +1,35 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{clovisai}
+\ProvidesPackage{clovisai}[2018/06/04 Clovis-AI's custom package]
+
+\RequirePackage{lmodern}
+
+% Inspired from
+% https://en.wikibooks.org/wiki/LaTeX/Creating_Packages
+
+%% Global indentation option
+\newif\if@neverindent\@neverindentfalse
+\DeclareOption{neverindent}{
+  \@neverindenttrue
+}
+
+\ProcessOptions\relax
+
+%% Traditional LaTeX or TeX follows...
+% ...
+
+\newlength{\pardefault}
+\setlength{\pardefault}{\parindent}
+\newcommand{\neverindent}{ \setlength{\parindent}{0pt} }
+\newcommand{\autoindent}{ \setlength{\parindent}{\pardefault} }
+
+\if@neverindent
+\neverindent
+\fi
+
+% Use the 'sans' font by default
+\renewcommand{\familydefault}{\sfdefault}
+
+% Length between the paragraphs
+\setlength{\parskip}{1em}
+
+\endinput
