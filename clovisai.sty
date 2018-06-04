@@ -3,6 +3,9 @@
 
 \RequirePackage{lmodern} % Fonts
 \RequirePackage{listings} % Code coloration
+\RequirePackage{fancyhdr} % Headers
+\RequirePackage{lastpage} % Pages
+\RequirePackage{titling} % Get the title of the document
 
 % Inspired from
 % https://en.wikibooks.org/wiki/LaTeX/Creating_Packages
@@ -30,7 +33,20 @@
 % Use the 'sans' font by default
 \renewcommand{\familydefault}{\sfdefault}
 
-%\pagestyle{headings}
+% Documentation of fancyhdr:
+% http://www.ntg.nl/maps/16/29.pdf
+\pagestyle{fancy}
+\fancyhf{}
+\cfoot{Page \thepage/\pageref{LastPage}}
+\fancyhead[LO,RE]{\bfseries\thetitle}
+\renewcommand{\sectionmark}[1]{\markboth{\thesection\ #1}{\thesection\ #1}}
+\fancyhead[LE,RO]{\bfseries\thepage}
+\fancyhead[RO]{\bfseries\rightmark}
+\fancyhead[LE]{\bfseries\leftmark}
+\fancypagestyle{plain}{%
+\fancyhead{} % get rid of headers
+\renewcommand{\headrulewidth}{0pt} % and the line
+}
 
 % Parameters for the support of UTF-8 in the package listings
 % Taken from http://borntocode.fr/latex-comment-inserer-et-customiser-du-code-source/
