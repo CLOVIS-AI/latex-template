@@ -6,6 +6,8 @@
 \RequirePackage{fancyhdr} % Headers
 \RequirePackage{lastpage} % Pages
 \RequirePackage{titling} % Get the title of the document
+\RequirePackage{eurosym} % Euro (€) symbol
+\RequirePackage{mdframed} % Quotes in italics
 
 % Inspired from
 % https://en.wikibooks.org/wiki/LaTeX/Creating_Packages
@@ -65,5 +67,15 @@
   {ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
   {€}{{\EUR}}1 {£}{{\pounds}}1
 }
+
+% 'aquote' environnement that is the same as 'quote' but with the author's name.
+% From https://tex.stackexchange.com/a/13761
+\def\signed #1{{\leavevmode\unskip\nobreak\hfil\penalty50\hskip2em
+  \hbox{}\nobreak\hfil(#1)%
+  \parfillskip=0pt \finalhyphendemerits=0 \endgraf}}
+\newsavebox\mybox
+\newenvironment{aquote}[1]
+  {\savebox\mybox{#1}\begin{quotation}\begin{mdframed}[linewidth=0pt]\itshape<<}
+  {>>\end{mdframed}\signed{\usebox\mybox}\end{quotation}}
 
 \endinput
