@@ -71,11 +71,11 @@
 % 'aquote' environnement that is the same as 'quote' but with the author's name.
 % From https://tex.stackexchange.com/a/13761
 \def\signed #1{{\leavevmode\unskip\nobreak\hfil\penalty50\hskip2em
-  \hbox{}\nobreak\hfil(#1)%
+  \hbox{}\nobreak\hfil#1%
   \parfillskip=0pt \finalhyphendemerits=0 \endgraf}}
 \newsavebox\mybox
 \newenvironment{aquote}[1]
   {\savebox\mybox{#1}\begin{quotation}\begin{mdframed}[linewidth=0pt]\itshape<<}
-  {>>\end{mdframed}\signed{\usebox\mybox}\end{quotation}}
+  {>>\signed{\usebox\mybox}\end{mdframed}\end{quotation}}
 
 \endinput
