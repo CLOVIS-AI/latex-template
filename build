@@ -1,0 +1,93 @@
+#!/bin/bash
+
+TMP=$(mktemp)
+echo "This session will be written at: $TMP"
+echo ""
+
+function FILENAME {
+	NAME=$(basename -- "$1")
+	NAME="${1%.*}"
+}
+
+function FIRSTRUN {
+	echo -n "$1 ["
+	latex -shell-escape $1 >/dev/null
+	echo -n '='
+}
+
+function BIBLIO {
+	FIRSTRUN $1
+	FILENAME $1
+	bibtex "$NAME.aux" >/dev/null && echo -n '=' && \
+	latex -shell-escape $1 >/dev/null && echo -n '='
+}
+
+function PDF {
+	echo -n "PDF LaTeX: "
+	BIBLIO $1
+	pdflatex -shell-escape $1 >/dev/null
+	echo '=]'
+}
+
+function SOFTCLEAN {
+	FILENAME $1
+	rm -rf  $NAME.aux \
+		$NAME.log \
+		$NAME.synctex.gz \
+		$NAME.toc \
+		$NAME.out \
+		$NAME.bbl \
+		_minted-$NAME \
+		$NAME.blg \
+		$NAME.dvi \
+		$NAME.idv \
+		$NAME.lg
+}
+
+function CLEAN {
+	echo -n "CLEANING $1:"
+	SOFTCLEAN $1
+	echo " [Done]"
+}
+
+function HARDCLEAN {
+	echo -n "HARD CLEANING $1: ["
+	SOFTCLEAN $1
+	echo -n "="
+	rm -rf  $NAME.pdf \
+		$NAME.html
+	echo "=]"
+}
+
+function HTML {
+	echo -n "HTML LaTeX: $1"
+	FILENAME $1
+	pandoc $NAME.tex -o $NAME.html -t html5
+	echo " [Done]"
+}
+
+function HELP {
+	echo " === HELP ==="
+	echo ""
+	echo "Syntax:"
+	echo "  ./build COMMAND FILE(S)"
+	echo ""
+	echo "Commands:"
+	echo "  PDF"
+	echo "  HTML"
+}
+
+case $1 in
+pdf|PDF)
+	shift;PDF $*;;
+html|HTML)
+	shift;HTML $*;;
+clean|CLEAN)
+	shift;CLEAN $*;;
+hardclean|HARDCLEAN|HARD|hard)
+	shift;HARDCLEAN $*;;
+*)
+	echo "You need to specify a goal.";HELP;;
+esac
+
+rm $TMP
