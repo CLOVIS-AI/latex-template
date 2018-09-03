@@ -1,6 +1,7 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{clovisai}[2018/06/04 Clovis-AI's custom package]
 
+\RequirePackage{xcolor} % Enable colors (for hyperref)
 \RequirePackage{lmodern} % Fonts
 \RequirePackage{listings} % Code coloration
 \RequirePackage{fancyhdr} % Headers
@@ -13,7 +14,10 @@
 \RequirePackage{varioref} % Better references
 \RequirePackage{geometry} % Control margins
 
-\geometry{margin=1in}
+\geometry{margin=1in} % Margins of 1in instead of 2
+
+% Underlined hyperlink
+\newcommand{\hrefu}[2]{\underline{\href{#1}{#2}}}
 
 % Inspired from
 % https://en.wikibooks.org/wiki/LaTeX/Creating_Packages
