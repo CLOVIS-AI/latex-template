@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Logging the LaTeX
 TMP=$(mktemp)
 echo "This session will be written at: $TMP"
 echo ""
@@ -11,21 +12,21 @@ function FILENAME {
 
 function FIRSTRUN {
 	echo -n "$1 ["
-	latex -shell-escape $1 >/dev/null
+	latex -shell-escape $1 >$TMP
 	echo -n '='
 }
 
 function BIBLIO {
 	FIRSTRUN $1
 	FILENAME $1
-	bibtex "$NAME.aux" >/dev/null && echo -n '=' && \
-	latex -shell-escape $1 >/dev/null && echo -n '='
+	bibtex "$NAME.aux" >$TMP && echo -n '=' && \
+	latex -shell-escape $1 >$TMP && echo -n '='
 }
 
 function PDF {
 	echo -n "PDF LaTeX: "
 	BIBLIO $1
-	pdflatex -shell-escape $1 >/dev/null
+	pdflatex -shell-escape $1 >$TMP
 	echo '=]'
 }
 
@@ -73,8 +74,28 @@ function HELP {
 	echo "  ./build COMMAND FILE(S)"
 	echo ""
 	echo "Commands:"
-	echo "  PDF"
-	echo "  HTML"
+	echo "  PDF       Export to PDF"
+	echo "  HTML      Export to HTML"
+	echo "  CLEAN     Deletes build file"
+	echo "  HARDCLEAN Deletes build files AND output files (PDF, HTML...)"
+	echo "  DEP       Print the dependencies & display whether they are installed"
+}
+
+function DEPS {
+	echo "The commands needed by this script are:"
+	check "latex" "Compile LaTeX documents"
+	check "bibtex" "Organize bibliographies in LaTeX documents"
+	check "pdflatex" "Export LaTeX to PDF"
+	check "pandoc" "Export LaTeX to HTML"
+}
+
+function check {
+	if hash $1 2>/dev/null
+	then
+		echo "         $1 -- $2"
+	else
+		echo -e "\033[0;31mMISSING: $1\033[0m -- $2"
+	fi
 }
 
 case $1 in
@@ -86,8 +107,8 @@ clean|CLEAN)
 	shift;CLEAN $*;;
 hardclean|HARDCLEAN|HARD|hard)
 	shift;HARDCLEAN $*;;
+dependencies|dep)
+	DEPS;;
 *)
 	echo "You need to specify a goal.";HELP;;
 esac
-
-rm $TMP
