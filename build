@@ -2,8 +2,13 @@
 
 # Logging the LaTeX
 TMP=$(mktemp)
-echo "This session will be written at: $TMP"
-echo ""
+if [ $1 = "--no-print-logs" ]
+then
+	shift;
+else
+	echo "This session will be written at: $TMP"
+	echo ""
+fi
 echo "RUNNING $0 $*" >> $TMP
 
 # Current directory
@@ -151,7 +156,7 @@ function HELP {
 	echo " === HELP ==="
 	echo ""
 	echo "General syntax:"
-	echo "  ./build COMMAND FILE(S)"
+	echo "  ./build [options] COMMAND FILE(S)"
 	echo ""
 	echo "Commands:"
 	echo "  PDF       Export to PDF"
@@ -160,11 +165,14 @@ function HELP {
 	echo "  HARDCLEAN Deletes build files AND output files (PDF, HTML...)"
 	echo ""
 	echo "Syntax for help commands:"
-	echo "  ./build COMMAND"
+	echo "  ./build [options] COMMAND"
 	echo ""
 	echo "Help commands:"
 	echo "  HELP     Show this page"
 	echo "  DEP      Print the dependencies & display whether they are installed"
+	echo ""
+	echo "Options:"
+	echo "  --no-print-logs  Do not print the log filename at the beginning of the script"
 }
 
 # Displays the dependencies
