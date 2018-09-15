@@ -4,34 +4,62 @@
 TMP=$(mktemp)
 echo "This session will be written at: $TMP"
 echo ""
+echo "RUNNING $0 $*" >> $TMP
 
+# Gets data about a file
+#   - $NAME          Name of the file (path, no extension)
+#   - $NAME_NO_PATH  Name of the file (no path, no extension)
+#   - $DIR           Name of the directory (only path)
 function FILENAME {
-	NAME=$(basename -- "$1")
+	echo "\nSearching filename data for $1" >> $TMP
+
+	NAME=$(basename -- "${1}")
 	NAME="${1%.*}"
+	echo "  Name of the file: $NAME" >> $TMP
+
+	DIR=$(dirname -- "${1}")
+	echo "  Name of the directory: $DIR" >> $TMP
+
+	NAME_NO_PATH=${NAME#$DIR}
+	NAME_NO_PATH=${NAME_NO_PATH#"/"}
+	echo "  Name of the file without the path: $NAME_NO_PATH" >> $TMP
+}
+
+# Requires the script to be running in the file's directory
+function REQ_WD {
+	FILENAME $1
+	cd $DIR
 }
 
 function FIRSTRUN {
+	echo "\nLaTeX first run:" >> $TMP
 	echo -n "$1 ["
-	latex -shell-escape $1 >$TMP
+	latex -shell-escape $NAME_NO_PATH.tex >$TMP
 	echo -n '='
 }
 
 function BIBLIO {
 	FIRSTRUN $1
-	FILENAME $1
+
+	echo "\nRunning BibTeX:" >> $TMP
 	bibtex "$NAME.aux" >$TMP && echo -n '=' && \
-	latex -shell-escape $1 >$TMP && echo -n '='
+	latex -shell-escape $NAME_NO_PATH.tex >$TMP && echo -n '='
 }
 
 function PDF {
 	echo -n "PDF LaTeX: "
+	REQ_WD $1
 	BIBLIO $1
-	pdflatex -shell-escape $1 >$TMP
+
+	echo "\nRunning PDFLaTeX:" >> $TMP
+	pdflatex -shell-escape $NAME_NO_PATH.tex >$TMP
 	echo '=]'
 }
 
 function SOFTCLEAN {
 	FILENAME $1
+
+	echo "\nCleaning (soft)" >> $TMP
 	rm -rf  $NAME.aux \
 		$NAME.log \
 		$NAME.synctex.gz \
@@ -55,6 +83,7 @@ function HARDCLEAN {
 	echo -n "HARD CLEANING $1: ["
 	SOFTCLEAN $1
 	echo -n "="
+	echo "\nCleaning (hard):" >> $TMP
 	rm -rf  $NAME.pdf \
 		$NAME.html
 	echo "=]"
@@ -63,7 +92,9 @@ function HARDCLEAN {
 function HTML {
 	echo -n "HTML LaTeX: $1"
 	FILENAME $1
-	pandoc $NAME.tex -o $NAME.html -t html5
+
+	echo "\nRunning HTML (pandoc):" >> $TMP
+	pandoc $NAME.tex -o $NAME.html -t html5 >> $TMP
 	echo " [Done]"
 }
 
@@ -87,12 +118,14 @@ function DEPS {
 	check "bibtex" "Organize bibliographies in LaTeX documents"
 	check "pdflatex" "Export LaTeX to PDF"
 	check "pandoc" "Export LaTeX to HTML"
+	check "dirname" "Get the directory in which a file is"
+	check "basename" "Get the name of the file, without the directory"
 }
 
 function check {
 	if hash $1 2>/dev/null
 	then
-		echo "         $1 -- $2"
+		echo "Found:   $1 -- $2"
 	else
 		echo -e "\033[0;31mMISSING: $1\033[0m -- $2"
 	fi
