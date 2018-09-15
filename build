@@ -11,7 +11,7 @@ echo "RUNNING $0 $*" >> $TMP
 #   - $NAME_NO_PATH  Name of the file (no path, no extension)
 #   - $DIR           Name of the directory (only path)
 function FILENAME {
-	echo "\nSearching filename data for $1" >> $TMP
+	echo "Searching filename data for $1" >> $TMP
 
 	NAME=$(basename -- "${1}")
 	NAME="${1%.*}"
@@ -32,7 +32,7 @@ function REQ_WD {
 }
 
 function FIRSTRUN {
-	echo "\nLaTeX first run:" >> $TMP
+	echo "LaTeX first run:" >> $TMP
 	echo -n "$1 ["
 	latex -shell-escape $NAME_NO_PATH.tex >$TMP
 	echo -n '='
@@ -41,7 +41,7 @@ function FIRSTRUN {
 function BIBLIO {
 	FIRSTRUN $1
 
-	echo "\nRunning BibTeX:" >> $TMP
+	echo "Running BibTeX:" >> $TMP
 	bibtex "$NAME.aux" >$TMP && echo -n '=' && \
 	latex -shell-escape $NAME_NO_PATH.tex >$TMP && echo -n '='
 }
@@ -51,7 +51,7 @@ function PDF {
 	REQ_WD $1
 	BIBLIO $1
 
-	echo "\nRunning PDFLaTeX:" >> $TMP
+	echo "Running PDFLaTeX:" >> $TMP
 	pdflatex -shell-escape $NAME_NO_PATH.tex >$TMP
 	echo '=]'
 }
@@ -59,7 +59,7 @@ function PDF {
 function SOFTCLEAN {
 	FILENAME $1
 
-	echo "\nCleaning (soft)" >> $TMP
+	echo "Cleaning (soft)" >> $TMP
 	rm -rf  $NAME.aux \
 		$NAME.log \
 		$NAME.synctex.gz \
@@ -83,7 +83,7 @@ function HARDCLEAN {
 	echo -n "HARD CLEANING $1: ["
 	SOFTCLEAN $1
 	echo -n "="
-	echo "\nCleaning (hard):" >> $TMP
+	echo "Cleaning (hard):" >> $TMP
 	rm -rf  $NAME.pdf \
 		$NAME.html
 	echo "=]"
@@ -93,7 +93,7 @@ function HTML {
 	echo -n "HTML LaTeX: $1"
 	FILENAME $1
 
-	echo "\nRunning HTML (pandoc):" >> $TMP
+	echo "Running HTML (pandoc):" >> $TMP
 	pandoc $NAME.tex -o $NAME.html -t html5 >> $TMP
 	echo " [Done]"
 }
