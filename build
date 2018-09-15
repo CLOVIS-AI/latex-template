@@ -6,8 +6,10 @@ echo "This session will be written at: $TMP"
 echo ""
 echo "RUNNING $0 $*" >> $TMP
 
+# Options for LaTeX commands
 LATEXFLAGS="-shell-escape -interaction=nonstopmode -halt-on-error"
 
+# Displays the 10 last lines of logs and quits
 function ERROR {
 	echo "" && echo ""
 	echo "An error occured... Here are the last 10 lines of logs;"
@@ -43,6 +45,7 @@ function REQ_WD {
 	cd $DIR
 }
 
+# LaTeX first run
 function FIRSTRUN {
 	echo "LaTeX first run:" >> $TMP
 	echo -n "$1 ["
@@ -50,6 +53,7 @@ function FIRSTRUN {
 	echo -n '='
 }
 
+# Runs bibtex
 function BIBLIO {
 	FIRSTRUN $1
 
@@ -59,6 +63,7 @@ function BIBLIO {
 	latex $LATEXFLAGS $NAME_NO_PATH.tex >> $TMP && echo -n '='
 }
 
+# Runs pdflatex
 function PDF {
 	echo -n "PDF LaTeX: "
 	REQ_WD $1
@@ -69,6 +74,7 @@ function PDF {
 	echo '=]'
 }
 
+# Cleans generated files
 function SOFTCLEAN {
 	FILENAME $1
 
@@ -86,12 +92,14 @@ function SOFTCLEAN {
 		$NAME.lg
 }
 
+# Cleans generated files + graphical output
 function CLEAN {
 	echo -n "CLEANING $1:"
 	SOFTCLEAN $1
 	echo " [Done]"
 }
 
+# Cleans all regenerable files
 function HARDCLEAN {
 	echo -n "HARD CLEANING $1: ["
 	SOFTCLEAN $1
@@ -102,6 +110,7 @@ function HARDCLEAN {
 	echo "=]"
 }
 
+# Generates HTML via Pandoc
 function HTML {
 	echo -n "HTML LaTeX: $1"
 	FILENAME $1
@@ -111,6 +120,7 @@ function HTML {
 	echo " [Done]"
 }
 
+# Displays the help
 function HELP {
 	echo " === HELP ==="
 	echo ""
@@ -118,6 +128,7 @@ function HELP {
 	echo "  ./build COMMAND FILE(S)"
 	echo ""
 	echo "Commands:"
+	echo "  HELP      Show this page"
 	echo "  PDF       Export to PDF"
 	echo "  HTML      Export to HTML"
 	echo "  CLEAN     Deletes build file"
@@ -125,6 +136,7 @@ function HELP {
 	echo "  DEP       Print the dependencies & display whether they are installed"
 }
 
+# Displays the dependencies
 function DEPS {
 	echo "The commands needed by this script are:"
 	check "latex" "Compile LaTeX documents"
@@ -135,6 +147,7 @@ function DEPS {
 	check "basename" "Get the name of the file, without the directory"
 }
 
+# Displays Found: or MISSING: for the command & description
 function check {
 	if hash $1 2>/dev/null
 	then
@@ -153,7 +166,7 @@ clean|CLEAN)
 	shift;CLEAN $*;;
 hardclean|HARDCLEAN|HARD|hard)
 	shift;HARDCLEAN $*;;
-dependencies|dep)
+dependencies|dep|DEP)
 	DEPS;;
 *)
 	echo "You need to specify a goal.";HELP;;
