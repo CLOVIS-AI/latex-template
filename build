@@ -6,6 +6,18 @@ echo "This session will be written at: $TMP"
 echo ""
 echo "RUNNING $0 $*" >> $TMP
 
+LATEXFLAGS="-shell-escape -interaction=nonstopmode -halt-on-error"
+
+function ERROR {
+	echo "" && echo ""
+	echo "An error occured... Here are the last 10 lines of logs;"
+	echo "The full logs are available at $TMP"
+	echo ""
+	echo "..."
+	cat $TMP | tail -10
+	exit
+}
+
 # Gets data about a file
 #   - $NAME          Name of the file (path, no extension)
 #   - $NAME_NO_PATH  Name of the file (no path, no extension)
@@ -34,16 +46,17 @@ function REQ_WD {
 function FIRSTRUN {
 	echo "LaTeX first run:" >> $TMP
 	echo -n "$1 ["
-	latex -shell-escape $NAME_NO_PATH.tex >$TMP
+	latex $LATEXFLAGS $NAME_NO_PATH.tex >> $TMP || ERROR
 	echo -n '='
 }
 
 function BIBLIO {
 	FIRSTRUN $1
 
+	BIBFILE=$NAME_NO_PATH.aux
 	echo "Running BibTeX:" >> $TMP
-	bibtex "$NAME.aux" >$TMP && echo -n '=' && \
-	latex -shell-escape $NAME_NO_PATH.tex >$TMP && echo -n '='
+	bibtex "$BIBFILE" >> $TMP && echo -n '=' && \
+	latex $LATEXFLAGS $NAME_NO_PATH.tex >> $TMP && echo -n '='
 }
 
 function PDF {
@@ -52,7 +65,7 @@ function PDF {
 	BIBLIO $1
 
 	echo "Running PDFLaTeX:" >> $TMP
-	pdflatex -shell-escape $NAME_NO_PATH.tex >$TMP
+	pdflatex $LATEXFLAGS $NAME_NO_PATH.tex >> $TMP || ERROR
 	echo '=]'
 }
 
