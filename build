@@ -6,6 +6,10 @@ echo "This session will be written at: $TMP"
 echo ""
 echo "RUNNING $0 $*" >> $TMP
 
+# Current directory
+CRT_DIR=$(pwd)
+echo "Running in directory $CRT_DIR" >> $TMP
+
 # Options for LaTeX commands
 LATEXFLAGS="-shell-escape -interaction=nonstopmode -halt-on-error"
 
@@ -45,6 +49,10 @@ function REQ_WD {
 	cd $DIR
 }
 
+function BACK_TO_WD {
+	cd $CRT_DIR
+}
+
 # LaTeX first run
 function FIRSTRUN {
 	echo "LaTeX first run:" >> $TMP
@@ -72,6 +80,9 @@ function PDF {
 	echo "Running PDFLaTeX:" >> $TMP
 	pdflatex $LATEXFLAGS $NAME_NO_PATH.tex >> $TMP || ERROR
 	echo '=]'
+
+	BACK_TO_WD
+	MORE_ARGS $* && shift && PDF $*
 }
 
 # Cleans generated files
@@ -97,6 +108,8 @@ function CLEAN {
 	echo -n "CLEANING $1:"
 	SOFTCLEAN $1
 	echo " [Done]"
+
+	MORE_ARGS $* && shift && CLEAN $*
 }
 
 # Cleans all regenerable files
@@ -108,6 +121,8 @@ function HARDCLEAN {
 	rm -rf  $NAME.pdf \
 		$NAME.html
 	echo "=]"
+
+	MORE_ARGS $* && shift && HARDCLEAN $*
 }
 
 # Generates HTML via Pandoc
@@ -118,22 +133,38 @@ function HTML {
 	echo "Running HTML (pandoc):" >> $TMP
 	pandoc $NAME.tex -o $NAME.html -t html5 >> $TMP
 	echo " [Done]"
+
+	MORE_ARGS $* && shift && HTML $*
+}
+
+function MORE_ARGS {
+	if [ "$#" -gt 1 ]
+	then
+		return 0
+	else
+		return 1
+	fi
 }
 
 # Displays the help
 function HELP {
 	echo " === HELP ==="
 	echo ""
-	echo "Syntax:"
+	echo "General syntax:"
 	echo "  ./build COMMAND FILE(S)"
 	echo ""
 	echo "Commands:"
-	echo "  HELP      Show this page"
 	echo "  PDF       Export to PDF"
 	echo "  HTML      Export to HTML"
 	echo "  CLEAN     Deletes build file"
 	echo "  HARDCLEAN Deletes build files AND output files (PDF, HTML...)"
-	echo "  DEP       Print the dependencies & display whether they are installed"
+	echo ""
+	echo "Syntax for help commands:"
+	echo "  ./build COMMAND"
+	echo ""
+	echo "Help commands:"
+	echo "  HELP     Show this page"
+	echo "  DEP      Print the dependencies & display whether they are installed"
 }
 
 # Displays the dependencies
