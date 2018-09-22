@@ -13,7 +13,7 @@
 \RequirePackage[hidelinks]{hyperref} % Hyperlinks
 \RequirePackage{varioref} % Better references
 \RequirePackage{geometry} % Control margins
-\RequirePackage{amssymb} %  More math stuff
+\RequirePackage{amsfonts} %  More math stuff
 \RequirePackage{amsmath} %  ...
 \RequirePackage{xifthen} % Command \ifthenelse
 
@@ -32,6 +32,44 @@
 	\cnpref[#1]{#2}}
 
 \newcommand{\cf}[1]{(cf.~\cref{#1})}
+
+% Sets in math mode
+\DeclareMathOperator{\setN}{\mathbb{N}}
+\DeclareMathOperator{\setNs}{\setN^{*}}
+\DeclareMathOperator{\setNp}{\setZ}
+\DeclareMathOperator{\setNps}{\setZs}
+
+\DeclareMathOperator{\setR}{\mathbb{R}}
+\DeclareMathOperator{\setRs}{\setR^{*}}
+\DeclareMathOperator{\setRp}{\setR_{+}}
+\DeclareMathOperator{\setRps}{\setR^{*}_{+}}
+
+\DeclareMathOperator{\setZ}{\mathbb{Z}}
+\DeclareMathOperator{\setZs}{\setZ^{*}}
+
+\DeclareMathOperator{\setI}{\mathbb{I}}
+\DeclareMathOperator{\setC}{\mathbb{C}}
+\DeclareMathOperator{\setQ}{\mathbb{Q}}
+\newcommand{\set}[1]{\mathbb{#1}}
+\newcommand{\sets}[1]{\set{#1}^{*}}
+\newcommand{\setp}[1]{\set{#1}_{+}}
+\newcommand{\setps}[1]{\set{#1}^{*}_{+}}
+
+% Set operations
+\DeclareMathOperator{\union}{\cup}
+\DeclareMathOperator{\inter}{\cap}
+
+% Probabilities
+\newcommand{\parmi}[2]{{#2 \choose #1}}
+\newcommand{\arrang}[2]{\mathrm{A}^{#1}_{#2}}
+\DeclareMathOperator{\suit}{\leadsto}
+
+% More greek
+\newcommand{\Alpha}{A}
+\newcommand{\Khi}{X}
+
+% Other maths
+\DeclareMathOperator{\infinity}{\infty}
 
 % Inspired from
 % https://en.wikibooks.org/wiki/LaTeX/Creating_Packages

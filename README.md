@@ -69,3 +69,38 @@ Displays formatted code.
     \end{minted}
 
 See the [documentation](http://ctan.tetaneutral.net/macros/latex/contrib/minted/minted.pdf) of the package `minted` for more information.
+
+# Maths
+
+## Sets
+
+    \setN  % A relative integer
+    \setR  % A real
+    \setZ  % A positive integer
+    \setI  % An imaginary number
+    \setC  % Reals and imaginary numbers
+    \setQ  % Quotients (fractions)
+    \set{LETTER HERE} % Any other character in the set font
+
+You can add a `p` at the end of some set commands to mean 'only positive', a `s` (for star) to mean 'non-null' and `ps` to mean both.
+The three options work for the general command.
+
+## Set operations
+
+    \union
+    \inter
+
+## Greek letters that are not defined
+
+    \Alpha % Uppercase alpha: A
+    \Khi   % Uppercase khi: X
+
+## Probabilities
+
+    \parmi{p}{n}  % p parmi n
+    \arrang{p}{n} % A^p_n (notation française)
+    \suit         % Pour les variables aléatoires: X ~> Z
+
+## Others
+
+   \infinity % Same as \infty but more readable
