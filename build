@@ -66,6 +66,19 @@ function FIRSTRUN {
 	echo -n '='
 }
 
+# Runs makeindex
+function INDEX {
+	FILENAME $1
+
+	if [ -f $NAME_NO_PATH.idx ]
+	then
+		echo "Running makeindex:" >> $TMP
+		cat $NAME_NO_PATH.idx | makeindex -i -q -o $NAME_NO_PATH.ind 2>>$TMP >> $TMP && echo -n "="
+	else
+		echo "Found no $NAME_NO_PATH.idx, skipping makeindex." >> $TMP
+	fi
+}
+
 # Runs bibtex
 function BIBLIO {
 	FIRSTRUN $1
@@ -81,6 +94,7 @@ function PDF {
 	echo -n "PDF LaTeX: "
 	REQ_WD $1
 	BIBLIO $1
+	INDEX $1
 
 	echo "Running PDFLaTeX:" >> $TMP
 	pdflatex $LATEXFLAGS $NAME_NO_PATH.tex >> $TMP || ERROR
@@ -100,6 +114,9 @@ function SOFTCLEAN {
 		$NAME.synctex.gz \
 		$NAME.toc \
 		$NAME.out \
+		$NAME.idx \
+		$NAME.ind \
+		$NAME.ilg \
 		$NAME.bbl \
 		_minted-$NAME \
 		$NAME.blg \
@@ -184,6 +201,7 @@ function DEPS {
 	check "pandoc" "Export LaTeX to HTML"
 	check "dirname" "Get the directory in which a file is"
 	check "basename" "Get the name of the file, without the directory"
+	check "makeindex" "Generate the index of a LaTeX document"
 }
 
 # Displays Found: or MISSING: for the command & description

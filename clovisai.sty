@@ -16,6 +16,8 @@
 \RequirePackage{amsfonts} %  More math stuff
 \RequirePackage{amsmath} %  ...
 \RequirePackage{xifthen} % Command \ifthenelse
+\RequirePackage{makeidx} % Make the index
+\RequirePackage{titlecaps} % Uppercase For Each Word
 
 \geometry{margin=1in} % Margins of 1in instead of 2
 
@@ -70,6 +72,14 @@
 
 % Other maths
 \DeclareMathOperator{\infinity}{\infty}
+
+% Index commands
+\newcommand{\entry}[1]{
+	\index{#1}
+}
+\newcommand{\mainentry}[1]{
+	\index{#1|textbf}
+}
 
 % Inspired from
 % https://en.wikibooks.org/wiki/LaTeX/Creating_Packages

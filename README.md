@@ -50,6 +50,17 @@ Displays the `NAME` and `PAGE` fields (see \cref), with the hyperlink.
     \cnpref{LABEL}
     \cnpref[NAME]{LABEL}
 
+## entry & mainentry
+
+Creates an entry in the index.
+
+    \entry{word}              % Simple entry
+    \entry{word!word}         % Sub-entry
+    \entry{word!word!word}    % Sub-sub-entry
+    \entry{SORT@word}         % Sort as SORT instead of word, eg. \entry{fx@$f(x)$} will sort as fx and display f(x) in math mode
+
+You can also use `\mainentry` with the same parameters, it will bold the page number (use it to point to the definition).
+
 # Environnements provided by this package
 
 ## cquote

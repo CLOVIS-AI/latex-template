@@ -1,0 +1,44 @@
+\documentclass[10pt,a4paper,french]{book}
+\usepackage{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{../clovisai}
+
+\makeindex
+
+\begin{document}
+
+\title{Titre du document}
+\author{Auteur du document}
+\maketitle
+
+%\begin{abstract} % ARTICLE ONLY
+%Ceci est l'introduction du document.
+%\end{abstract}
+
+\tableofcontents
+
+\frontmatter % Introduction, BOOK ONLY
+\chapter{Prologue}
+
+\mainmatter % Corps du texte, BOOK ONLY
+
+\part{Première partie du livre}
+\entry{test}
+\chapter{Premier chapitre}
+\section{Texte}
+
+\part{Deuxième partie du livre}
+\chapter{Une autre chapitre}
+\section{Autre}
+
+\appendix % Annexes, ARTICLE & BOOK
+\part{Annexes}
+
+\chapter{Remerciements}
+
+\backmatter % Index, bibliographie, BOOK ONLY
+
+\printindex
+
+\end{document}
