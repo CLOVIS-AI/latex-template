@@ -15,11 +15,23 @@
 \RequirePackage{geometry} % Control margins
 \RequirePackage{amssymb} %  More math stuff
 \RequirePackage{amsmath} %  ...
+\RequirePackage{xifthen} % Command \ifthenelse
 
 \geometry{margin=1in} % Margins of 1in instead of 2
 
 % Underlined hyperlink
 \newcommand{\hrefu}[2]{\underline{\href{#1}{#2}}}
+
+% Better refs
+\newcommand{\cnref}[2][]{``\ifthenelse{\equal{#1}{}}{\nameref{#2}}{\hyperref[#2]{#1}}''}
+
+\newcommand{\cnpref}[2][]{\cnref[#1]{#2}
+	\vpageref{#2}}
+
+\newcommand{\cref}[2][]{§\ref{#2}
+	\cnpref[#1]{#2}}
+
+\newcommand{\cf}[1]{(cf.~\cref{#1})}
 
 % Inspired from
 % https://en.wikibooks.org/wiki/LaTeX/Creating_Packages
