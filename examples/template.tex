@@ -5,6 +5,11 @@
 \usepackage{../clovisai}
 
 \makeindex
+\makeglossaries
+
+\glossaryentry{lorem}{Lorem Ipsum}{Lorem Ipsums}{Ceci est la description.}
+\newacronym{fps}{FPS}{Frame Per Second}
+\newdualentry{cgi}{CGI}{Computer-Generated Interface}{This is the description}
 
 \begin{document}
 
@@ -31,6 +36,7 @@
 \part{Deuxième partie du livre}
 \chapter{Une autre chapitre}
 \section{Autre}
+\gls{lorem} \gls{fps} \gls{fps} \gls{cgi}
 
 \appendix % Annexes, ARTICLE & BOOK
 \part{Annexes}
@@ -39,6 +45,7 @@
 
 \backmatter % Index, bibliographie, BOOK ONLY
 
-\printindex
+\cprintindex
+\cprintglossaries
 
 \end{document}

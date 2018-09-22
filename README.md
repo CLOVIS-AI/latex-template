@@ -50,7 +50,7 @@ Displays the `NAME` and `PAGE` fields (see \cref), with the hyperlink.
     \cnpref{LABEL}
     \cnpref[NAME]{LABEL}
 
-## entry & mainentry
+## Indexes: entry & mainentry
 
 Creates an entry in the index.
 
@@ -60,6 +60,43 @@ Creates an entry in the index.
     \entry{SORT@word}         % Sort as SORT instead of word, eg. \entry{fx@$f(x)$} will sort as fx and display f(x) in math mode
 
 You can also use `\mainentry` with the same parameters, it will bold the page number (use it to point to the definition).
+
+The command `cprintindex` replaces `printindex`.
+
+## Glossary
+
+The command `cprintglossaries` replaces `printglossaries`.
+
+### glossaryentry
+
+Creates a new glossary entry.
+
+    \glossaryentry{ID}{DISPLAY SINGULAR}{DISPLAY PLURAL}{DESCRIPTION}
+
+### newacronym
+
+Creates a new acronym.
+
+    \newacronym{ID}{SHORT FORM}{LONG FORM}
+
+### newdualentry
+
+Creates both an acronym AND a normal glossary entry.
+
+    \newdualentry{ID}{SHORT FORM}{LONG FORM}{DESCRIPTION}
+
+### Displaying
+
+The next commands can be used to display the acronyms & entries.
+
+    \gls{ID}       % Print the entry or an acronym
+    \Gls{ID}       % Print the entry or an acronym with an uppercase at the first word
+    \glspl{ID}     % Print the entry's plural form
+    \Glspl{ID}     % Print the entry's plural form with an uppercase first letter
+    \glslink{ID}{TEXT} % Print TEXT but link to ID
+    \glsdesc{ID}   % Print the description
+    \acrlong{ID}   % Print the long version of an acronym
+    \acrshort{ID}  % Print the short version of an acronym
 
 # Environnements provided by this package
 

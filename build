@@ -73,9 +73,21 @@ function INDEX {
 	if [ -f $NAME_NO_PATH.idx ]
 	then
 		echo "Running makeindex:" >> $TMP
-		cat $NAME_NO_PATH.idx | makeindex -i -q -o $NAME_NO_PATH.ind 2>>$TMP >> $TMP && echo -n "="
+		cat $NAME_NO_PATH.idx | makeindex -i -q -o $NAME_NO_PATH.ind 2>>$TMP >> $TMP || ERROR && echo -n "="
 	else
 		echo "Found no $NAME_NO_PATH.idx, skipping makeindex." >> $TMP
+	fi
+}
+
+function GLOSSARY {
+	FILENAME $1
+
+	if [ -f $NAME_NO_PATH.glo ]
+	then
+		echo "Running makeglossaries:" >> $TMP
+		makeglossaries $NAME_NO_PATH >> $TMP || ERROR && echo -n "="
+	else
+		echo "Found no $NAME_NO_PATH.glo, skipping makeglossaries." >> $TMP
 	fi
 }
 
@@ -95,6 +107,7 @@ function PDF {
 	REQ_WD $1
 	BIBLIO $1
 	INDEX $1
+	GLOSSARY $1
 
 	echo "Running PDFLaTeX:" >> $TMP
 	pdflatex $LATEXFLAGS $NAME_NO_PATH.tex >> $TMP || ERROR
@@ -115,7 +128,11 @@ function SOFTCLEAN {
 		$NAME.toc \
 		$NAME.out \
 		$NAME.idx \
+		$NAME.glg \
+		$NAME.glo \
+		$NAME.gls \
 		$NAME.ind \
+		$NAME.ist \
 		$NAME.ilg \
 		$NAME.bbl \
 		_minted-$NAME \

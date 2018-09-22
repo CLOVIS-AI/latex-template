@@ -18,6 +18,8 @@
 \RequirePackage{xifthen} % Command \ifthenelse
 \RequirePackage{makeidx} % Make the index
 \RequirePackage{titlecaps} % Uppercase For Each Word
+\RequirePackage[nopostdot]{glossaries} % Make the glossary
+\RequirePackage{xparse} % Parsing strings
 
 \geometry{margin=1in} % Margins of 1in instead of 2
 
@@ -79,6 +81,34 @@
 }
 \newcommand{\mainentry}[1]{
 	\index{#1|textbf}
+}
+\newcommand{\cprintindex}{
+	\addtocounter{chapter}{1}
+	\addcontentsline{toc}{chapter}{\protect\numberline{\thechapter} Index}
+	\printindex
+}
+
+% Glossaries commands
+\newcommand{\glossaryentry}[4]{
+	\newglossaryentry{#1}
+	{name={#2},
+	 sort={#1},
+	 plural={#3},
+	 description={#4}
+	}
+}
+\DeclareDocumentCommand{\newdualentry}{ O{} O{} m m m m } {
+  \newglossaryentry{gls-#3}{name={#5},text={#5\glsadd{#3}},sort={#3},
+    description={#6},#1
+  }
+  %\makeglossaries
+  \newacronym[see={[cf.]{gls-#3}},#2]{#3}{#4}{#5\glsadd{gls-#3}}
+}
+\AtBeginDocument{\setglossarystyle{listgroup}}
+\newcommand{\cprintglossaries}{
+	\addtocounter{chapter}{1}
+	\addcontentsline{toc}{chapter}{\protect\numberline{\thechapter} Glossaire}
+	\printglossaries
 }
 
 % Inspired from

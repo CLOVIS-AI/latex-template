@@ -5,6 +5,9 @@
 \usepackage{../clovisai}
 
 \makeindex
+\makeglossary
+
+\glossaryentry{test}{test}{tests}{This is a test.}
 
 \begin{document}
 
@@ -36,6 +39,8 @@ Ceci est l'introduction du document.
 \cnref{sources}
 
 \cnpref{sources}
+
+\gls{test} \glspl{test}
 
 Plus d'information à la \autoref{test}.
 
@@ -138,5 +143,6 @@ Le domicile est un autre moyen d'identification, on ne peut en avoir qu'un (qu'o
 \part{Annexes}
 
 \printindex
+\printglossaries
 
 \end{document}
