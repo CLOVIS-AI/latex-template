@@ -3,3 +3,5 @@
 *synctex.gz
 *aux
 *.toc
+*.out
+*minted*
