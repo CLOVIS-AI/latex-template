@@ -85,7 +85,7 @@ function GLOSSARY {
 	if [ -f $NAME_NO_PATH.glo ]
 	then
 		echo "Running makeglossaries:" >> $TMP
-		makeglossaries $NAME_NO_PATH >> $TMP || ERROR && echo -n "="
+		makeglossaries $NAME_NO_PATH >> $TMP 2>>$TMP || ERROR && echo -n "="
 	else
 		echo "Found no $NAME_NO_PATH.glo, skipping makeglossaries." >> $TMP
 	fi
@@ -101,8 +101,34 @@ function BIBLIO {
 	latex $LATEXFLAGS $NAME_NO_PATH.tex >> $TMP && echo -n '='
 }
 
-# Runs pdflatex
+function ISUPTODATE {
+	[ $# -ne 2 ] && echo "ISUPTODATE: requires 2 file parameters, given: $#." && exit 1
+	[ -f $1 ] || return 0
+	[ -f $2 ] || return 1
+	date1=$(date -d "$(stat -c %y $1)" +%s)
+	date2=$(date -d "$(stat -c %y $2)" +%s)
+	[ $date1 -lt $date2 ]
+}
+
 function PDF {
+	FILENAME $1
+	if ISUPTODATE $NAME.tex $NAME.pdf
+	then
+		if ISUPTODATE $NAME.bib $NAME.pdf
+		then
+			echo "PDF LaTeX: $1 [UP-TO-DATE]"
+		else
+			MAKEPDF $1
+		fi
+	else
+		MAKEPDF $1
+	fi
+
+	MORE_ARGS $* && shift && PDF $*
+}
+
+# Runs pdflatex
+function MAKEPDF {
 	echo -n "PDF LaTeX: "
 	REQ_WD $1
 	BIBLIO $1
@@ -114,7 +140,6 @@ function PDF {
 	echo '=]'
 
 	BACK_TO_WD
-	MORE_ARGS $* && shift && PDF $*
 }
 
 # Cleans generated files
@@ -122,7 +147,7 @@ function SOFTCLEAN {
 	FILENAME $1
 
 	echo "Cleaning (soft)" >> $TMP
-	rm -rf  $NAME.aux \
+	rm -rfv $NAME.aux \
 		$NAME.log \
 		$NAME.synctex.gz \
 		$NAME.toc \
@@ -139,7 +164,7 @@ function SOFTCLEAN {
 		$NAME.blg \
 		$NAME.dvi \
 		$NAME.idv \
-		$NAME.lg
+		$NAME.lg >> $TMP
 }
 
 # Cleans generated files + graphical output
@@ -157,23 +182,32 @@ function HARDCLEAN {
 	SOFTCLEAN $1
 	echo -n "="
 	echo "Cleaning (hard):" >> $TMP
-	rm -rf  $NAME.pdf \
-		$NAME.html
+	rm -rfv $NAME.pdf >> $TMP
+	rm -rfv $NAME.html >> $TMP
 	echo "=]"
 
 	MORE_ARGS $* && shift && HARDCLEAN $*
 }
 
-# Generates HTML via Pandoc
 function HTML {
-	echo -n "HTML LaTeX: $1"
 	FILENAME $1
+	if ISUPTODATE $NAME.tex $NAME.html
+	then
+		echo "HTML LaTeX: $1 [UP-TO-DATE]"
+	else
+		MAKEHTML $1
+	fi
+
+	MORE_ARGS $* && shift && HTML $*
+}
+
+# Generates HTML via Pandoc
+function MAKEHTML {
+	echo -n "HTML LaTeX: $1"
 
 	echo "Running HTML (pandoc):" >> $TMP
 	pandoc $NAME.tex -o $NAME.html -t html5 >> $TMP
 	echo " [Done]"
-
-	MORE_ARGS $* && shift && HTML $*
 }
 
 function MORE_ARGS {
@@ -219,6 +253,8 @@ function DEPS {
 	check "dirname" "Get the directory in which a file is"
 	check "basename" "Get the name of the file, without the directory"
 	check "makeindex" "Generate the index of a LaTeX document"
+	check "date" "Timestamp conversion"
+	check "stat" "Timestamp of last modification of a file"
 }
 
 # Displays Found: or MISSING: for the command & description
