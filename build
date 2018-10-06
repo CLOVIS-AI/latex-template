@@ -11,6 +11,14 @@ else
 fi
 echo "RUNNING $0 $*" >> $TMP
 
+# Colors
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+BLUE='\033[0;34m'
+ORANGE='\033[0;33m'
+WHITE='\033[0;37m'
+NO_COLOR='\033[0;0m'
+
 # Current directory
 CRT_DIR=$(pwd)
 echo "Running in directory $CRT_DIR" >> $TMP
@@ -61,7 +69,7 @@ function BACK_TO_WD {
 # LaTeX first run
 function FIRSTRUN {
 	echo "LaTeX first run:" >> $TMP
-	echo -n "$1 ["
+	echo -ne "$1 $BLUE["
 	latex $LATEXFLAGS $NAME_NO_PATH.tex >> $TMP || ERROR
 	echo -n '='
 }
@@ -116,7 +124,7 @@ function PDF {
 	then
 		if ISUPTODATE $NAME.bib $NAME.pdf
 		then
-			echo "PDF LaTeX: $1 [UP-TO-DATE]"
+			echo -e "${WHITE}PDF LaTeX:$NO_COLOR $1 $GREEN[UP-TO-DATE]$NO_COLOR"
 		else
 			MAKEPDF $1
 		fi
@@ -129,7 +137,7 @@ function PDF {
 
 # Runs pdflatex
 function MAKEPDF {
-	echo -n "PDF LaTeX: "
+	echo -ne "${WHITE}PDF LaTeX:$NO_COLOR "
 	REQ_WD $1
 	BIBLIO $1
 	INDEX $1
@@ -137,7 +145,7 @@ function MAKEPDF {
 
 	echo "Running PDFLaTeX:" >> $TMP
 	pdflatex $LATEXFLAGS $NAME_NO_PATH.tex >> $TMP || ERROR
-	echo '=]'
+	echo -e "=]$NO_COLOR"
 
 	BACK_TO_WD
 }
@@ -169,22 +177,22 @@ function SOFTCLEAN {
 
 # Cleans generated files + graphical output
 function CLEAN {
-	echo -n "CLEANING $1:"
+	echo -ne "${WHITE}CLEANING:$NO_COLOR $1"
 	SOFTCLEAN $1
-	echo " [Done]"
+	echo -e " $BLUE[Done]$NO_COLOR"
 
 	MORE_ARGS $* && shift && CLEAN $*
 }
 
 # Cleans all regenerable files
 function HARDCLEAN {
-	echo -n "HARD CLEANING $1: ["
+	echo -ne "${WHITE}HARD CLEANING:$NO_COLOR $1 $BLUE["
 	SOFTCLEAN $1
 	echo -n "="
 	echo "Cleaning (hard):" >> $TMP
 	rm -rfv $NAME.pdf >> $TMP
 	rm -rfv $NAME.html >> $TMP
-	echo "=]"
+	echo -e "=]$NO_COLOR"
 
 	MORE_ARGS $* && shift && HARDCLEAN $*
 }
@@ -193,7 +201,7 @@ function HTML {
 	FILENAME $1
 	if ISUPTODATE $NAME.tex $NAME.html
 	then
-		echo "HTML LaTeX: $1 [UP-TO-DATE]"
+		echo -e "${WHITE}HTML LaTeX:$NO_COLOR $1 $GREEN[UP-TO-DATE]$NO_COLOR"
 	else
 		MAKEHTML $1
 	fi
@@ -203,11 +211,11 @@ function HTML {
 
 # Generates HTML via Pandoc
 function MAKEHTML {
-	echo -n "HTML LaTeX: $1"
+	echo -ne "${WHITE}HTML LaTeX:$NO_COLOR $1"
 
 	echo "Running HTML (pandoc):" >> $TMP
 	pandoc $NAME.tex -o $NAME.html -t html5 >> $TMP
-	echo " [Done]"
+	echo -e " $BLUE[Done]$NO_COLOR"
 }
 
 function MORE_ARGS {
