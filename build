@@ -6,7 +6,7 @@ if [ $1 = "--no-print-logs" ]
 then
 	shift;
 else
-	echo "This session will be written at: $TMP"
+	echo "This session will be written at: file://$TMP"
 	echo ""
 fi
 echo "RUNNING $0 $*" >> $TMP
@@ -229,7 +229,7 @@ function MORE_ARGS {
 
 # Displays the help
 function HELP {
-	echo " === HELP ==="
+	echo -e "$WHITE === HELP === $NO_COLOR"
 	echo ""
 	echo "General syntax:"
 	echo "  ./build [options] COMMAND FILE(S)"
