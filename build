@@ -28,9 +28,9 @@ LATEXFLAGS="-shell-escape -interaction=nonstopmode -halt-on-error"
 
 # Displays the 10 last lines of logs and quits
 function ERROR {
-	echo "" && echo ""
-	echo "An error occured... Here are the last 10 lines of logs;"
-	echo "The full logs are available at $TMP"
+	echo -e "$WHITE" && echo ""
+	echo -e "${RED}An error occured... Here are the last 10 lines of logs;"
+	echo -e "The full logs are available at $TMP$WHITE"
 	echo ""
 	echo "..."
 	cat $TMP | tail -10
