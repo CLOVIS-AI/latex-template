@@ -70,7 +70,7 @@ function BACK_TO_WD {
 function FIRSTRUN {
 	echo "LaTeX first run:" >> $TMP
 	echo -ne "$1 $BLUE["
-	latex $LATEXFLAGS $NAME_NO_PATH.tex >> $TMP || ERROR
+	pdflatex $LATEXFLAGS $NAME_NO_PATH.tex >> $TMP || ERROR
 	echo -n '='
 }
 
@@ -106,7 +106,7 @@ function BIBLIO {
 	BIBFILE=$NAME_NO_PATH.aux
 	echo "Running BibTeX:" >> $TMP
 	bibtex "$BIBFILE" >> $TMP && echo -n '=' && \
-	latex $LATEXFLAGS $NAME_NO_PATH.tex >> $TMP && echo -n '='
+	pdflatex $LATEXFLAGS $NAME_NO_PATH.tex >> $TMP && echo -n '='
 }
 
 function ISUPTODATE {
