@@ -1,5 +1,5 @@
 BUILD="./build"
-FILES="examples/droit.tex"
+FILES="examples/droit.tex examples/other.tex"
 FLAGS="--no-print-logs"
 
 pdf:

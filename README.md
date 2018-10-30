@@ -151,4 +151,51 @@ The three options work for the general command.
 
 ## Others
 
-   \infinity % Same as \infty but more readable
+    \infinity % Same as \infty but more readable
+
+## UML diagrams
+
+### Class diagrams
+
+    \begin{tikzpicture}
+        ...
+    \end{tikzpicture}
+
+Inside, you can create your classes, etc.
+
+    \begin{class}{NAME OF THE CLASS}{COORDINATES:eg.:0,0}
+        ...
+    \end{class}
+
+You can also use `abstractclass` and `interface`.
+
+Inside a class, you can use:
+
+    \attribute{...} % An attribute
+    \operation{...} % An operation/method
+
+You can put an abstract operation with:
+
+    \operation[0]{...}
+
+Inheriting from a class is as simple as:
+
+    \begin{class}{Parent}{0,0}
+        ...
+    \end{class}
+    \begin{class}{Child}{0,-5}
+        \inherit{Parent}
+    \end{class}
+
+In the same way, you can implement an interface, by using:
+
+    \implement{Parent}
+
+You can use associations:
+
+    \begin{class}{First}{0,0}...\end{class}
+    \begin{class}{Second}{0,-5}...\end{class}
+    \association{First}{NAME}{MULTIPLICITY}{Second}{NAME}{MULTIPLICITY}
+    \unidirectionalAssociation{First}{NAME}{MULTIPLICITY}{Second}
+    \aggregation{First}{NAME}{MULTIPLICITY}{Second}
+    \composition{First}{NAME}{MULTIPLICITY}{Second}
