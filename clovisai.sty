@@ -23,6 +23,10 @@
 \RequirePackage{pgf-umlcd} % UML class diagrams
 \RequirePackage{pgf-umlsd} % UML sequence diagrams
 
+\edef\restoreparindent{\parindent=\the\parindent\relax}
+\RequirePackage{parskip} % Better paragraphs
+\restoreparindent
+
 \geometry{margin=1in} % Margins of 1in instead of 2
 \bibliographystyle{plain} % Style
 
