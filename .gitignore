@@ -5,3 +5,6 @@
 *.toc
 *.out
 *minted*
+*.bbl
+*.blg
+*.pdf_tex

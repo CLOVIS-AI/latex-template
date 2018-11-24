@@ -263,6 +263,7 @@ function DEPS {
 	check "makeindex" "Generate the index of a LaTeX document"
 	check "date" "Timestamp conversion"
 	check "stat" "Timestamp of last modification of a file"
+	check "inkscape" "Including SVG files into the documents"
 }
 
 # Displays Found: or MISSING: for the command & description

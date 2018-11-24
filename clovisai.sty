@@ -22,6 +22,7 @@
 \RequirePackage{xparse} % Parsing strings
 \RequirePackage{pgf-umlcd} % UML class diagrams
 \RequirePackage{pgf-umlsd} % UML sequence diagrams
+\RequirePackage[width=\textwidth]{svg} % Exporting SVG images
 
 \edef\restoreparindent{\parindent=\the\parindent\relax}
 \RequirePackage{parskip} % Better paragraphs
@@ -189,7 +190,7 @@
   \parfillskip=0pt \finalhyphendemerits=0 \endgraf}}
 \newsavebox\mybox
 \newenvironment{cquote}[1]
-  {\savebox\mybox{#1}\begin{quotation}\begin{mdframed}[linewidth=0pt]\itshape<<}
-  {>>\signed{\usebox\mybox}\end{mdframed}\end{quotation}}
+  {\savebox\mybox{#1}\begin{quotation}\begin{mdframed}[linewidth=0pt]\itshape<<~}
+  {~>>\signed{\usebox\mybox}\end{mdframed}\end{quotation}}
 
 \endinput
