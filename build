@@ -70,7 +70,7 @@ function BACK_TO_WD {
 function FIRSTRUN {
 	echo "LaTeX first run:" >> $TMP
 	echo -ne "$1 $BLUE["
-	pdflatex $LATEXFLAGS $NAME_NO_PATH.tex >> $TMP || ERROR
+	lualatex $LATEXFLAGS $NAME_NO_PATH.tex >> $TMP || ERROR
 	echo -n '='
 }
 
@@ -106,7 +106,7 @@ function BIBLIO {
 	BIBFILE=$NAME_NO_PATH.aux
 	echo "Running BibTeX:" >> $TMP
 	bibtex "$BIBFILE" >> $TMP && echo -n '=' && \
-	pdflatex $LATEXFLAGS $NAME_NO_PATH.tex >> $TMP && echo -n '='
+	lualatex $LATEXFLAGS $NAME_NO_PATH.tex >> $TMP && echo -n '='
 }
 
 function ISUPTODATE {
@@ -135,7 +135,7 @@ function PDF {
 	MORE_ARGS $* && shift && PDF $*
 }
 
-# Runs pdflatex
+# Runs lualatex
 function MAKEPDF {
 	echo -ne "${WHITE}PDF LaTeX:$NO_COLOR "
 	REQ_WD $1
@@ -143,8 +143,8 @@ function MAKEPDF {
 	INDEX $1
 	GLOSSARY $1
 
-	echo "Running PDFLaTeX:" >> $TMP
-	pdflatex $LATEXFLAGS $NAME_NO_PATH.tex >> $TMP || ERROR
+	echo "Running LuaLaTeX:" >> $TMP
+	lualatex $LATEXFLAGS $NAME_NO_PATH.tex >> $TMP || ERROR
 	echo -e "=]$NO_COLOR"
 
 	BACK_TO_WD
@@ -235,8 +235,8 @@ function HELP {
 	echo "  ./build [options] COMMAND FILE(S)"
 	echo ""
 	echo "Commands:"
-	echo "  PDF       Export to PDF"
-	echo "  HTML      Export to HTML"
+	echo "  PDF       Export to PDF (LuaLaTeX)"
+	echo "  HTML      Export to HTML (Pandoc)"
 	echo "  CLEAN     Deletes build file"
 	echo "  HARDCLEAN Deletes build files AND output files (PDF, HTML...)"
 	echo ""
@@ -256,7 +256,7 @@ function DEPS {
 	echo "The commands needed by this script are:"
 	check "latex" "Compile LaTeX documents"
 	check "bibtex" "Organize bibliographies in LaTeX documents"
-	check "pdflatex" "Export LaTeX to PDF"
+	check "lualatex" "Export LaTeX to PDF"
 	check "pandoc" "Export LaTeX to HTML"
 	check "dirname" "Get the directory in which a file is"
 	check "basename" "Get the name of the file, without the directory"
