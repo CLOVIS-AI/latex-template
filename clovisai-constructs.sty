@@ -1,0 +1,64 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{clovisai-constructs}[2018/06/04 Clovis-AI's custom package for new constructs]
+
+%BEGIN Command 'ifthenelse' from 'xifthen'
+\RequirePackage{xifthen}
+%END
+
+%BEGIN Package 'listings' for code coloration
+\RequirePackage{listings}
+%END
+
+%BEGIN Package 'href' for hyper links
+\RequirePackage[hidelinks]{hyperref}
+
+% Displays underlined text.
+% Usage: \hrefu{URL}{TEXT TO DISPLAY}
+\newcommand{\hrefu}[2]{\underline{\href{#1}{#2}}}
+%END
+
+%BEGIN Package 'varioref' for nicer references
+\RequirePackage{varioref}
+
+% References a label by printing its name, with a working hyperlink.
+% Usage: \cnref{LABEL}
+% Display a custom field instead of the name of the section: \cnref[NAME]{LABEL}
+\newcommand{\cnref}[2][]{``\ifthenelse{\equal{#1}{}}{\nameref{#2}}{\hyperref[#2]{#1}}''}
+
+% References a label by printing its name and page, with a working hyperlink.
+% Usage: \cnpref{LABEL}
+% Override the name field: \cnpref[NAME]{LABEL}
+\newcommand{\cnpref}[2][]{\cnref[#1]{#2}\vpageref{#2}}
+
+% References a label, with a working hyperlink, with the format: §SEC ''NAME'' PAGE
+% Usage: \cref{LABEL}
+% It is possible to override the NAME field: \cref[NAME]{LABEL}
+\newcommand{\cref}[2][]{§\ref{#2} \cnpref[#1]{#2}}
+
+% References a label, with a working hyperlink, with the format: (cf. §SEC ''NAME'' PAGE)
+% Usage: \cf{LABEL}
+% Override the NAME field: \cf[NAME]{LABEL}
+\newcommand{\cf}[1]{(cf.~\cref{#1})}
+
+\newcommand{\footnoteref}[1]{\footnote{cf.~\cref{#1}}}
+%END
+
+%BEGIN Custome 'cquote' environnement with the author's name.
+\RequirePackage{mdframed}
+
+% Displays a quote, with the author's name.
+% Usage: \begin{aquote}{AUTHOR}TEXT\end{aquote}
+\def\signed #1{{\leavevmode\unskip\nobreak\hfil\penalty50\hskip2em
+  \hbox{}\nobreak\hfil#1%
+  \parfillskip=0pt \finalhyphendemerits=0 \endgraf}}
+\newsavebox\mybox
+\newenvironment{cquote}[1]
+  {\savebox\mybox{#1}\begin{quotation}\begin{mdframed}[linewidth=0pt]\itshape<<~}
+  {~>>\signed{\usebox\mybox}\end{mdframed}\end{quotation}}
+%END
+
+%BEGIN Bibliography with bibtex
+%\RequirePackage{bibtex}
+%END
+
+\endinput

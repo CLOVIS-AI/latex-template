@@ -1,195 +1,63 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{clovisai}[2018/06/04 Clovis-AI's custom package]
 
-\RequirePackage{xcolor} % Enable colors (for hyperref)
-\RequirePackage{lmodern} % Fonts
-\RequirePackage{listings} % Code coloration
-\RequirePackage{fancyhdr} % Headers
-\RequirePackage{lastpage} % Pages
-\RequirePackage{titling} % Get the title of the document
-\RequirePackage{eurosym} % Euro (€) symbol
-\RequirePackage{mdframed} % Quotes in italics
-\RequirePackage{minted} % Code coloration
-\RequirePackage[hidelinks]{hyperref} % Hyperlinks
-\RequirePackage{varioref} % Better references
-\RequirePackage{geometry} % Control margins
-\RequirePackage{amsfonts} %  More math stuff
-\RequirePackage{amsmath} %  ...
-\RequirePackage{xifthen} % Command \ifthenelse
-\RequirePackage{makeidx} % Make the index
-\RequirePackage{titlecaps} % Uppercase For Each Word
-\RequirePackage[nopostdot]{glossaries} % Make the glossary
-\RequirePackage{xparse} % Parsing strings
-\RequirePackage{pgf-umlcd} % UML class diagrams
-\RequirePackage{pgf-umlsd} % UML sequence diagrams
+\RequirePackage{clovisai-constructs}
 
-\edef\restoreparindent{\parindent=\the\parindent\relax}
-\RequirePackage{parskip} % Better paragraphs
-\restoreparindent
+%BEGIN Colors
+\RequirePackage{color}
 
-\geometry{margin=1in} % Margins of 1in instead of 2
-\bibliographystyle{plain} % Style
+\definecolor{comments}{rgb}{0,0.6,0}
+\definecolor{numbers}{rgb}{0.5,0.5,0.5}
+\definecolor{text}{rgb}{0.58,0,0.82}
+%END
 
-% Underlined hyperlink
-\newcommand{\hrefu}[2]{\underline{\href{#1}{#2}}}
-
-% Better refs
-\newcommand{\cnref}[2][]{``\ifthenelse{\equal{#1}{}}{\nameref{#2}}{\hyperref[#2]{#1}}''}
-
-\newcommand{\cnpref}[2][]{\cnref[#1]{#2}
-	\vpageref{#2}}
-
-\newcommand{\cref}[2][]{§\ref{#2}
-	\cnpref[#1]{#2}}
-
-\newcommand{\cf}[1]{(cf.~\cref{#1})}
-
-% Sets in math mode
-\DeclareMathOperator{\setN}{\mathbb{N}}
-\DeclareMathOperator{\setNs}{\setN^{*}}
-\DeclareMathOperator{\setNp}{\setZ}
-\DeclareMathOperator{\setNps}{\setZs}
-
-\DeclareMathOperator{\setR}{\mathbb{R}}
-\DeclareMathOperator{\setRs}{\setR^{*}}
-\DeclareMathOperator{\setRp}{\setR_{+}}
-\DeclareMathOperator{\setRps}{\setR^{*}_{+}}
-
-\DeclareMathOperator{\setZ}{\mathbb{Z}}
-\DeclareMathOperator{\setZs}{\setZ^{*}}
-
-\DeclareMathOperator{\setI}{\mathbb{I}}
-\DeclareMathOperator{\setC}{\mathbb{C}}
-\DeclareMathOperator{\setQ}{\mathbb{Q}}
-\newcommand{\set}[1]{\mathbb{#1}}
-\newcommand{\sets}[1]{\set{#1}^{*}}
-\newcommand{\setp}[1]{\set{#1}_{+}}
-\newcommand{\setps}[1]{\set{#1}^{*}_{+}}
-
-% Set operations
-\DeclareMathOperator{\union}{\cup}
-\DeclareMathOperator{\inter}{\cap}
-
-% Probabilities
-\newcommand{\parmi}[2]{{#2 \choose #1}}
-\newcommand{\arrang}[2]{\mathrm{A}^{#1}_{#2}}
-\DeclareMathOperator{\suit}{\leadsto}
-
-% More greek
-\newcommand{\Alpha}{A}
-\newcommand{\Khi}{X}
-
-% Other maths
-\DeclareMathOperator{\infinity}{\infty}
-
-% Index commands
-\newcommand{\entry}[1]{
-	\index{#1}
-}
-\newcommand{\mainentry}[1]{
-	\index{#1|textbf}
-}
-\newcommand{\cprintindex}{
-	\addtocounter{chapter}{1}
-	\addcontentsline{toc}{chapter}{\protect\numberline{\thechapter} Index}
-	\printindex
-}
-
-% Glossaries commands
-\newcommand{\glossaryentry}[4]{
-	\newglossaryentry{#1}
-	{name={#2},
-	 sort={#1},
-	 plural={#3},
-	 description={#4}
-	}
-}
-\DeclareDocumentCommand{\newdualentry}{ O{} O{} m m m m } {
-  \newglossaryentry{gls-#3}{name={#5},text={#5\glsadd{#3}},sort={#3},
-    description={#6},#1
-  }
-  %\makeglossaries
-  \newacronym[see={[cf.]{gls-#3}},#2]{#3}{#4}{#5\glsadd{gls-#3}}
-}
-\AtBeginDocument{\setglossarystyle{listgroup}}
-\newcommand{\cprintglossaries}{
-	\addtocounter{chapter}{1}
-	\addcontentsline{toc}{chapter}{\protect\numberline{\thechapter} Glossaire}
-	\printglossaries
-}
-
-% Inspired from
-% https://en.wikibooks.org/wiki/LaTeX/Creating_Packages
-
-%% Global indentation option
-\newif\if@neverindent\@neverindentfalse
-\DeclareOption{neverindent}{
-  \@neverindenttrue
-}
-
-\ProcessOptions\relax
-
-%% Traditional LaTeX or TeX follows...
-% ...
-
-\newlength{\pardefault}
-\setlength{\pardefault}{\parindent}
-\newcommand{\neverindent}{ \setlength{\parindent}{0pt} }
-\newcommand{\autoindent}{ \setlength{\parindent}{\pardefault} }
-
-\if@neverindent
-\neverindent
-\fi
-
-% Use the 'sans' font by default
+%BEGIN Font Management
+\RequirePackage{lmodern}
 \renewcommand{\familydefault}{\sfdefault}
+%END
 
-% Documentation of fancyhdr:
-% http://www.ntg.nl/maps/16/29.pdf
-\pagestyle{fancy}
-\fancyhf{}
-\cfoot{Page \thepage/\pageref{LastPage}}
-\fancyhead[LO,RE]{\bfseries\thetitle}
-\renewcommand{\sectionmark}[1]{\markboth{\thesection\ #1}{\thesection\ #1}}
-\fancyhead[LE,RO]{\bfseries\thepage}
-\fancyhead[RO]{\bfseries\rightmark}
-\fancyhead[LE]{\bfseries\leftmark}
-\fancypagestyle{plain}{%
-\fancyhead{} % get rid of headers
-\renewcommand{\headrulewidth}{0pt} % and the line
+%BEGIN Source code with 'listings'
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=left,
+  numberstyle=\tiny\color{numbers},
+  keywordstyle=\color{blue},
+  commentstyle=\color{comments},
+  stringstyle=\color{text},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=4
 }
+%END
 
-% Parameters for the support of UTF-8 in the package listings
-% Taken from http://borntocode.fr/latex-comment-inserer-et-customiser-du-code-source/
-\lstset{
-  literate=
-  {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
-  {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
-  {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
-  {À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
-  {ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
-  {Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
-  {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
-  {Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
-  {œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
-  {ű}{{\H{u}}}1 {Ű}{{\H{U}}}1 {ő}{{\H{o}}}1 {Ő}{{\H{O}}}1
-  {ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
-  {€}{{\EUR}}1 {£}{{\pounds}}1
+%BEGIN Kotlin source code in 'listings'
+\lstdefinelanguage{kotlin}[]{Java}{
+  % List of keywords from https://kotlinlang.org/docs/reference/keyword-reference.html
+  morekeywords={as,as?,break,class,continue,do,
+    else,false,for,fun,if,in,!in,interface,
+    is,!is,null,object,package,return,super,
+    this,throw,true,try,typealias,val,var,
+    when,while,by,catch,constructor,@delegate,
+    dynamic,@field,@file,finally,@get,get,import,init,
+    @param,@property,@receiver,@set,set,@setparam,where,
+    actual,abstract,annotation,companion,const,
+    crossinline,data,enum,expect,external,
+    final,infix,inline,inner,internal,lateinit,
+    noinline,open,operator,out,override,private,
+    protected,public,reified,sealed,suspend,tailrec,
+    vararg,until,to,let,with,apply,run,?,!!}
 }
+%END
 
-\setminted{linenos,
-		   autogobble,
-		   mathescape,
-		   breakautoindent}
-
-% 'aquote' environnement that is the same as 'quote' but with the author's name.
-% From https://tex.stackexchange.com/a/13761
-\def\signed #1{{\leavevmode\unskip\nobreak\hfil\penalty50\hskip2em
-  \hbox{}\nobreak\hfil#1%
-  \parfillskip=0pt \finalhyphendemerits=0 \endgraf}}
-\newsavebox\mybox
-\newenvironment{cquote}[1]
-  {\savebox\mybox{#1}\begin{quotation}\begin{mdframed}[linewidth=0pt]\itshape<<}
-  {>>\signed{\usebox\mybox}\end{mdframed}\end{quotation}}
+%BEGIN Configuration for 'memoir'
+\RequirePackage{graphicx}
+\midsloppy
+\chapterstyle{madsen}
+%END
 
 \endinput
