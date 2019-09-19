@@ -58,6 +58,18 @@
 \RequirePackage{graphicx}
 \midsloppy
 \chapterstyle{madsen}
+
+% Subsections should have a number and be included in the Table of Contents
+\setsecnumdepth{subsection}
+\maxtocdepth{subsection}
+
+% Exclude the chapter number from sections
+\counterwithout{section}{chapter}
+
+% Chapters should reset the section number
+\makeatletter
+\@addtoreset{section}{chapter}
+\makeatother
 %END
 
 \endinput
