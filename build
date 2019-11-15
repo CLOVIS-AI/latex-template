@@ -11,6 +11,9 @@ else
 fi
 echo "RUNNING $0 $*" >> $TMP
 
+# Chosing LaTeX engine
+LATEX="${LATEX_ENGINE:-lualatex}"
+
 # Colors
 GREEN='\033[0;32m'
 RED='\033[0;31m'
@@ -70,7 +73,7 @@ function BACK_TO_WD {
 function FIRSTRUN {
 	echo "LaTeX first run:" >> $TMP
 	echo -ne "$1 $BLUE["
-	lualatex $LATEXFLAGS $NAME_NO_PATH.tex >> $TMP || ERROR
+	$LATEX $LATEXFLAGS $NAME_NO_PATH.tex >> $TMP || ERROR
 	echo -n '='
 }
 
@@ -106,7 +109,7 @@ function BIBLIO {
 	BIBFILE=$NAME_NO_PATH.aux
 	echo "Running BibTeX:" >> $TMP
 	bibtex "$BIBFILE" >> $TMP && echo -n '=' && \
-	lualatex $LATEXFLAGS $NAME_NO_PATH.tex >> $TMP && echo -n '='
+	$LATEX $LATEXFLAGS $NAME_NO_PATH.tex >> $TMP && echo -n '='
 }
 
 function ISUPTODATE {
@@ -143,8 +146,8 @@ function MAKEPDF {
 	INDEX $1
 	GLOSSARY $1
 
-	echo "Running LuaLaTeX:" >> $TMP
-	lualatex $LATEXFLAGS $NAME_NO_PATH.tex >> $TMP || ERROR
+	echo "Running $LATEX:" >> $TMP
+	$LATEX $LATEXFLAGS $NAME_NO_PATH.tex >> $TMP || ERROR
 	echo -e "=]$NO_COLOR"
 
 	BACK_TO_WD
